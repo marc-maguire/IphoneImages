@@ -11,6 +11,8 @@
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *image;
+@property (nonatomic) NSString *downloadURLString;
+@property (weak, nonatomic) IBOutlet UIButton *button;
 
 @end
 
@@ -18,16 +20,60 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.downloadURLString = @"http://imgur.com/bktnImE.png";
+    [self networkCall];
     
-   //Create a new NSURL object from the iPhone image url string.
-    NSURL *url = [NSURL URLWithString:@"http://imgur.com/bktnImE.png"]; //1
+   }
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+- (IBAction)randomize:(id)sender {
+    int i = arc4random_uniform(5);
+    
+    switch (i) {
+        case 0:
+            self.downloadURLString = @"http://imgur.com/bktnImE.png";
+            break;
+        
+        case 1:
+            self.downloadURLString = @"http://imgur.com/zdwdenZ.png";
+            break;
+            
+        case 2:
+            self.downloadURLString = @"http://imgur.com/CoQ8aNl.png";
+            break;
+           
+        case 3:
+            self.downloadURLString = @"http://imgur.com/2vQtZBb.png";
+            break;
+            
+        case 4:
+            self.downloadURLString = @"http://imgur.com/y9MIaCS.png";
+            break;
+            
+            
+        default:
+            break;
+    }
+    
+    [self networkCall];
+    
+}
+
+- (void)networkCall {
+    
+    //Create a new NSURL object from the iPhone image url string.
+    NSURL *url = [NSURL URLWithString:self.downloadURLString]; //1
     //An NSURLSessionConfiguration object defines the behavior and policies to use when making a request with an NSURLSession object. We can set things like the caching policy on this object. The default system values are good for now, so we'll just grab the default configuration.
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration]; //2
     
     //Create an NSURLSession object using our session configuration. Any changes we want to make to our configuration object must be done before this.
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];//3
-   
+    
     //We create a task that will actually download the image from the server. The session creates and configures the task and the task makes the request. Download tasks retrieve data in the form of a file, and support background downloads and uploads while the app is not running. Check out the NSURLSession API Referece for more info on this. We could optionally use a delegate to get notified when the request has completed, but we're going to use a completion block instead. This block will get called when the network request is complete, weather it was successful or not.
     
     NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithURL:url completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
@@ -56,15 +102,7 @@
     
     [downloadTask resume]; //5
     
-}
 
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)networkCall {
     
     
 }
